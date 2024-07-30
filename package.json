@@ -1,0 +1,32 @@
+{
+  "name": "bigbin",
+  "version": "1.0.0",
+  "description": "nothing, just some silly code",
+  "main": "main.js",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "start": "node dist/buildTools/main.js",
+    "copy-pem": "copyfiles '*.pem' dist/buildTools",
+    "copy-assets": "copyfiles -e '**/*.ts' 'src/**/*.*' dist/buildTools",
+    "copy-app": "copyfiles -u 2 -e '**/*.ts' 'app/src/**/*' dist/",
+    "copy": "npm run copy-pem && npm run copy-assets && npm run copy-app",
+    "build-root": "tsc -p tsconfig.json",
+    "build-app": "tsc -p app/tsconfig.json",
+    "build": "npm run clean && npm run build-root && npm run build-app",
+    "dev": " npm run build && npm run copy && npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bin",
+  "license": "ISC",
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.4",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.12",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "node-watch": "^0.7.4",
+    "ws": "^8.18.0"
+  }
+}

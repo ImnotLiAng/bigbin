@@ -34,9 +34,9 @@ const serverOptions = {
 // 创建 HTTP/2 服务器
 const server = http2.createSecureServer(serverOptions, (req, res) => {
     // 设置响应头
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.writeHead(200, { 'Content-Type': 'text/html' });
     // 发送响应
-    res.end('Hello, HTTP/2 with self-signed certificate!');
+    res.end(fs.readFileSync(path.join(__dirname, "../frontend/index.html")));
 });
 // 监听端口
 server.listen(8443, () => {

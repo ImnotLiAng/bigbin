@@ -2,8 +2,6 @@ import * as http2 from 'http2';
 import * as fs from 'fs';
 import * as path from 'path';
 import config from "./config";
-import "./utils/hotPageReload";
-
 // 读取自签名证书和私钥
 const serverOptions = {
   key: fs.readFileSync(path.join(__dirname, './server-key.pem')),
@@ -30,7 +28,6 @@ const server = http2.createSecureServer(serverOptions, (req, res) => {
   if (data) {
     res.end(data);
   }
-  
 });
 
 // 监听端口

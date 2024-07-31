@@ -4,6 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "outDir": "../dist",
     "rootDir": "./src",
   },

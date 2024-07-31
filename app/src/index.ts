@@ -4,7 +4,7 @@
   ws.onerror = console.error;
   
   ws.onopen =  function open() {
-    console.log("opend1111111");
+    console.log("opend");
   };
   ws.onmessage = function message({data}) {
     console.log("receive:", data);
@@ -13,8 +13,7 @@
 })()
 
 try {
-
-  console.log(11);
+  throw new SyntaxError("test");
 } catch(e) {
   console.error(e instanceof SyntaxError); // true
 }

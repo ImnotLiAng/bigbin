@@ -39,10 +39,10 @@ const ts = require("typescript");
     ]);
 
     function handle(url) {
-      if (!url.endsWith(".ts")) copyFile(url).then(() => {
-        sendMessage();
+      if (!url.endsWith(".ts")) {
+        copyFile(url).then(sendMessage);
         return;
-      });
+      }
 
       const source = fs.readFileSync(url, 'utf-8');
       const result = ts.transpileModule(source, {

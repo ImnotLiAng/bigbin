@@ -1,7 +1,11 @@
 import path from "path";
 
+const root = process.cwd();
+
 export default {
-  staticPath: path.join(__dirname, "../"),
+  appSrcDir: path.join(root, "app", "src"),
+  appDistDir: path.join(root, "dist"),
+  keyDir: path.join(root, "keys"),
   port: 8443,
   socketPort: 8444
 }

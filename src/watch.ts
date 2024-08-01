@@ -7,7 +7,7 @@ import config from "./config";
 const { appSrcDir } = config;
 
 // watch app
-(function() {
+const socketServer = (function() {
   let socket: null | WebSocket = null;
   const wss = new WebSocket.Server({ port: 8444 });
   wss.on('connection', (ws) => {
@@ -37,7 +37,7 @@ const { appSrcDir } = config;
     function handle(fullPath: string) {
       buildSingal(fullPath).then(sendMessage);
     }
-
+    return wss;
 })();
 
 // watch buildTools
@@ -67,14 +67,17 @@ const { appSrcDir } = config;
     if (currentProcess) {
       currentProcess.kill();
     }
-
     currentProcess = exec('npm run build', (error, stdout, stderr) => {
       if (error) {
+        console.log(error);
         return;
       }
       if (stderr) {
+        console.log(error);
         return;
       }
     });
   }
 })();
+
+

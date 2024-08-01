@@ -3,7 +3,7 @@
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "./dist/buildTools",
+    "outDir": "./dist",
     "rootDir": "./src",
   },
   "include": ["src/**/*", "config.ts"],

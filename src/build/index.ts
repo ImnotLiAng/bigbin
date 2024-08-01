@@ -92,6 +92,7 @@ function traverseDirectory(dir: string, callback: (arg: string) => any) {
 }
 
 const build = (dir: string) => {
+  // todo: rmAppDistDirSync
   traverseDirectory(dir, pack);
 }
 

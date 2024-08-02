@@ -5,6 +5,30 @@ import ts from "typescript";
 
 const { appSrcDir, appDistDir } = config;
 
+function removeRecursive(dir: string) {
+  for (const entry of fs.readdirSync(dir)) {
+    const entryPath = path.join(dir, entry);
+    let stats;
+    try {
+      stats = fs.lstatSync(entryPath);
+    } catch {
+      continue;
+    }
+    if (stats.isDirectory()) removeRecursive(entryPath);
+    else fs.unlinkSync(entryPath);
+  }
+  fs.rmdirSync(dir);
+}
+
+function ensureDirectoryExistence(filePath: string) {
+  const dirname = path.dirname(filePath);
+  if (fs.existsSync(dirname)) {
+    return true;
+  }
+  ensureDirectoryExistence(dirname);
+  fs.mkdirSync(dirname);
+}
+
 // 接收一个完整的源码路径，并将其转换为输出路径中的对应目录
 function convertToOutputPath(sourcePath: string) {
   // 确保 sourcePath 是绝对路径
@@ -24,18 +48,22 @@ function convertToOutputPath(sourcePath: string) {
   return outputPath;
 }
 
+
 function pack<T extends string>(fullPath: T): Promise<T> {
+  const TargetPath = convertToOutputPath(fullPath);
+
+  ensureDirectoryExistence(TargetPath);
+
   if (!fullPath.endsWith(".ts")) {
     return new Promise((resolve, reject) => {
       try { 
-        fs.copyFile(fullPath, convertToOutputPath(fullPath), (err) => {
+        fs.copyFile(fullPath, TargetPath, (err) => {
           if (err) reject(err);
           resolve(fullPath);
         });
       } catch(err) {
         reject(err);
       }
-      
     })
   }
   return new Promise((resolve, reject) => {
@@ -44,7 +72,7 @@ function pack<T extends string>(fullPath: T): Promise<T> {
       const result = ts.transpileModule(source, {
         compilerOptions: { module: ts.ModuleKind.ESNext }
       });
-      const parsedPath = path.parse(convertToOutputPath(fullPath));
+      const parsedPath = path.parse(TargetPath);
       const outPutPath = path.format({
         ...parsedPath,
         base: undefined, // 避免 base 覆盖
@@ -92,7 +120,7 @@ function traverseDirectory(dir: string, callback: (arg: string) => any) {
 }
 
 const build = (dir: string) => {
-  // todo: rmAppDistDirSync
+  removeRecursive(appDistDir);
   traverseDirectory(dir, pack);
 }
 

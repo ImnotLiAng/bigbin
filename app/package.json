@@ -1,0 +1,16 @@
+{
+  "name": "bigbin",
+  "version": "1.0.0",
+  "description": "nothing, just some silly code",
+  "main": "main.js",
+  "scripts": {
+    "dev": "buildTools",
+    "build": "tsc && buildTools build"
+  },
+  "author": "bin",
+  "license": "ISC",
+  "devDependencies": {
+  },
+  "dependencies": {
+  }
+}

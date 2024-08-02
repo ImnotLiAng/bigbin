@@ -2,6 +2,7 @@ import http2 from 'http2';
 import fs from 'fs';
 import path from 'path';
 import config from "../config";
+import ts from "typescript";
 
 // 读取自签名证书和私钥
 const serverOptions = {
@@ -19,16 +20,32 @@ const server = http2.createSecureServer(serverOptions, (req, res) => {
     default:
       url = req.url;
   }
-  if (req.url.endsWith(".js")) {
+  url = path.join(config.appSrcDir, url);
+  if (!~url.indexOf(".")) url += ".ts"
+  if (url.endsWith(".js") || url.endsWith(".ts")) {
     res.writeHead(200, {"Content-Type": "application/javascript" })
   }
-  let data;
-  try {
-    data = fs.readFileSync(path.join(config.appDistDir, url));
-  } catch(err) {}
-  if (data) {
-    res.end(data);
-  }
+    if (!url.endsWith(".ts")) {
+      fs.readFile(url, ((err, data) => {
+        if (err) {
+          res.end("read File error");
+          return;
+        }
+        res.end(data);
+      }))
+    } else {
+      fs.readFile(url, {encoding :'utf-8'}, (err, source) => {
+        if (err) {
+          res.end("read File error");
+          return;   
+        }
+        const result = ts.transpileModule(source, {
+        compilerOptions: { module: ts.ModuleKind.ESNext }
+        });
+        const data = Buffer.from(result.outputText, 'utf-8');
+        res.end(data);
+      })
+    }
 });
 
 // 监听端口

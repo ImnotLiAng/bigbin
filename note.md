@@ -5,3 +5,5 @@ problems:
 1. How could I reload the page after SyntaxError occur
   reason: The browser would not exec the js file after detecing the SyntaxError during preparsing (That's why we need eslint) 
    - Put “webscoket” in separate js file, and let the browser parse it before loading the page.
+
+## use jsx syntax without React

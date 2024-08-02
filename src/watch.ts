@@ -1,7 +1,5 @@
 import chokidar from "chokidar";
-import { exec, ChildProcess } from "child_process";
 import WebSocket from "ws";
-import { buildSingal } from "./build/index";
 import config from "./config";
 
 const { appSrcDir } = config;
@@ -21,63 +19,17 @@ const socketServer = (function() {
 
   watcher
     .on('add', path => {
-      handle(path);
+      sendMessage();
     })
     .on('change', path => {
-      handle(path);
+      sendMessage();
     })
     .on('unlink', path => {
-      handle(path);
+      sendMessage();
     });
 
     function sendMessage() {
       if (socket) socket.send("update");
     }
-
-    function handle(fullPath: string) {
-      buildSingal(fullPath).then(sendMessage);
-    }
     return wss;
 })();
-
-// watch buildTools
-(function () {
-
-  const watcher = chokidar.watch('src', {
-    ignored: /^\./,  // 忽略以 . 开头的文件
-    persistent: true, // 持续监听
-    ignoreInitial: true, // 忽略初始添加事件
-  });
-  // 监听文件变化
-  watcher
-    .on('add', path => {
-      runBuild(path);
-    })
-    .on('change', path => {
-      runBuild(path);
-    })
-    .on('unlink', path => {
-      runBuild(path);
-    });
-
-  let currentProcess: ChildProcess | null = null;
-
-  function runBuild(path: string) {
-    // 如果有正在执行的进程，先终止它
-    if (currentProcess) {
-      currentProcess.kill();
-    }
-    currentProcess = exec('npm run build', (error, stdout, stderr) => {
-      if (error) {
-        console.log(error);
-        return;
-      }
-      if (stderr) {
-        console.log(error);
-        return;
-      }
-    });
-  }
-})();
-
-

@@ -56,7 +56,7 @@ function pack<T extends string>(fullPath: T): Promise<T> {
 
   if (!fullPath.endsWith(".ts")) {
     return new Promise((resolve, reject) => {
-      try { 
+      try {
         fs.copyFile(fullPath, TargetPath, (err) => {
           if (err) reject(err);
           resolve(fullPath);
@@ -124,9 +124,9 @@ const build = (dir: string) => {
   traverseDirectory(dir, pack);
 }
 
-const buildSingal = pack;
+const buildSingle = pack;
 
 export {
   build, 
-  buildSingal
+  buildSingle
 }

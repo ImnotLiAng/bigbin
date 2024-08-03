@@ -2,7 +2,7 @@ import http2 from 'http2';
 import fs from 'fs';
 import path from 'path';
 import config from "../config";
-import ts from "typescript";
+import parse from "../parseFile";
 
 // 读取自签名证书和私钥
 const serverOptions = {
@@ -25,27 +25,12 @@ const server = http2.createSecureServer(serverOptions, (req, res) => {
   if (url.endsWith(".js") || url.endsWith(".ts")) {
     res.writeHead(200, {"Content-Type": "application/javascript" })
   }
-    if (!url.endsWith(".ts")) {
-      fs.readFile(url, ((err, data) => {
-        if (err) {
-          res.end("read File error");
-          return;
-        }
-        res.end(data);
-      }))
-    } else {
-      fs.readFile(url, {encoding :'utf-8'}, (err, source) => {
-        if (err) {
-          res.end("read File error");
-          return;   
-        }
-        const result = ts.transpileModule(source, {
-        compilerOptions: { module: ts.ModuleKind.ESNext }
-        });
-        const data = Buffer.from(result.outputText, 'utf-8');
-        res.end(data);
-      })
-    }
+  parse(url).then(data => {
+    res.end(data);
+  }).catch(() => {
+    res.end("404");
+  })
+    
 });
 
 // 监听端口

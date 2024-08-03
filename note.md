@@ -7,3 +7,7 @@ problems:
    - Put “webscoket” in separate js file, and let the browser parse it before loading the page.
 
 ## use jsx syntax without React
+1. add plugin function, parse jsx syntax, and return js code.
+
+### plugin function
+read File, transform to AST, plugins modify AST, at the end, generate new string.

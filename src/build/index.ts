@@ -2,6 +2,7 @@ import config from "../config";
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
+import parse from "../parseFile";
 
 const { appSrcDir, appDistDir } = config;
 
@@ -49,43 +50,27 @@ function convertToOutputPath(sourcePath: string) {
 }
 
 
-function pack<T extends string>(fullPath: T): Promise<T> {
+async function pack<T extends string>(fullPath: T): Promise<T> {
   const TargetPath = convertToOutputPath(fullPath);
-
   ensureDirectoryExistence(TargetPath);
-
-  if (!fullPath.endsWith(".ts")) {
-    return new Promise((resolve, reject) => {
-      try {
-        fs.copyFile(fullPath, TargetPath, (err) => {
-          if (err) reject(err);
-          resolve(fullPath);
-        });
-      } catch(err) {
-        reject(err);
-      }
-    })
-  }
-  return new Promise((resolve, reject) => {
-    fs.readFile(fullPath, {encoding :'utf-8'}, (err, source) => {
-      if (err) reject(err);
-      const result = ts.transpileModule(source, {
-        compilerOptions: { module: ts.ModuleKind.ESNext }
-      });
-      const parsedPath = path.parse(TargetPath);
-      const outPutPath = path.format({
-        ...parsedPath,
+  
+  return new Promise(async (resolve, reject) => {
+    const data = await parse(fullPath);
+    let outPutPath = TargetPath;
+  
+    if (TargetPath.endsWith('.ts')) {
+      outPutPath = path.format({
+        ...path.parse(TargetPath),
         base: undefined, // 避免 base 覆盖
         ext: '.js'
       });
-      fs.writeFile(outPutPath, result.outputText, {encoding: 'utf8'}, (err) => {
-        if (err) reject(err);
-        resolve(fullPath);
-      });
-    });
-        
-  })
+    }
   
+    fs.writeFile(outPutPath, data, (err) => {
+      if (err) reject(err);
+      resolve(fullPath);
+    });
+  });
 }
 
 function traverseDirectory(dir: string, callback: (arg: string) => any) {
@@ -119,9 +104,21 @@ function traverseDirectory(dir: string, callback: (arg: string) => any) {
   });
 }
 
-const build = (dir: string) => {
-  removeRecursive(appDistDir);
-  traverseDirectory(dir, pack);
+function isValidDirectory(p: string) {
+  try {
+    const stats = fs.lstatSync(p); // 获取路径状态
+    return stats.isDirectory(); // 判断是否为目录
+  } catch (err) {
+    return false;
+  }
+}
+
+const build = (srcDir: string, distDir: string) => {
+  if (isValidDirectory(distDir)) {
+    removeRecursive(distDir);
+  }
+  
+  traverseDirectory(srcDir, pack);
 }
 
 const buildSingle = pack;

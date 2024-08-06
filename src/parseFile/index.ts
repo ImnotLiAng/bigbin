@@ -1,15 +1,35 @@
 import fs from "fs";
-import ts from "typescript";
+import * as Babel from "@babel/core";
+
+async function transformTs(str: string, filePath: string) {
+  console.log(filePath);
+  try {
+    const res = await Babel.transform(str, {
+      presets: [["@babel/preset-typescript", {
+        isTSX: true,
+        allExtensions: true,
+        jsxPragma: 'MReact',
+        jsxPragmaFrag: 'MReact.Fragment'
+      }]],
+    });
+    if (filePath.endsWith('.tsx')) {
+      console.log(res);
+    }
+    return res?.code || "";
+  } catch(err) {
+    console.log(err);
+  }
+  
+  return "";
+}
  
 const parse = async (fullPath: string) => {
     const data: string = await readAsString(fullPath);
-    let res;
     switch (fullPath.split('.').pop()) {
+        case 'tsx':
         case 'ts':
-            res = ts.transpileModule(data, {
-                compilerOptions: { module: ts.ModuleKind.ESNext }
-            });
-            return res.outputText;
+            const res = await transformTs(data, fullPath);
+            return res;
         default:
             return data;
     }

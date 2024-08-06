@@ -11,7 +11,11 @@
   "author": "bin",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-syntax-jsx": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
     "@tsconfig/node18": "^18.2.4",
+    "@types/babel__core": "^7.20.5",
     "@types/node": "^22.0.0",
     "@types/ws": "^8.5.12",
     "chokidar": "^3.6.0",

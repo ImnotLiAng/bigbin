@@ -5,7 +5,7 @@ import config from "./config";
 const { appSrcDir } = config;
 
 // watch app
-const socketServer = (function() {
+(function() {
   let socket: null | WebSocket = null;
   const wss = new WebSocket.Server({ port: 8444 });
   wss.on('connection', (ws) => {

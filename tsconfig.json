@@ -5,8 +5,11 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "outDir": "./dist",
+    "declarationDir": "./dist/types",
     "rootDir": "./src",
+    "declaration": true,
+    "typeRoots": [ "./types", "./node_modules/@types",]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types/**/*"],
   "exclude": ["node_modules", "app"],
 }

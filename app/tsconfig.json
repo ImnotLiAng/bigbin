@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "target": "ES6",
     "module": "ESNext",
     "useDefineForClassFields": true,
@@ -16,7 +16,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "typeRoots": [ "../node_modules/@types",],
+    
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

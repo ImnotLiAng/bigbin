@@ -7,6 +7,7 @@
     "dev": "buildTools",
     "build": "tsc && buildTools build"
   },
+  "type": "module",
   "author": "bin",
   "license": "ISC",
   "devDependencies": {

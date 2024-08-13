@@ -1,7 +1,7 @@
 import "./devServer";
 import "./watch";
 
-const testFun: myType.fun = (a: string) => {
+const testFun = (a: string) => {
   console.log("test:", a);
 }
 

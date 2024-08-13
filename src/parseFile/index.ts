@@ -2,14 +2,14 @@ import fs from "fs";
 import * as Babel from "@babel/core";
 
 async function transformTs(str: string, filePath: string) {
-  console.log(filePath);
   try {
     const res = await Babel.transform(str, {
       presets: [["@babel/preset-typescript", {
         isTSX: true,
         allExtensions: true,
-        jsxPragma: 'MReact',
-        jsxPragmaFrag: 'MReact.Fragment'
+        jsxPragma: "h",
+      }], ["@babel/preset-react", {
+        development: true
       }]],
     });
     if (filePath.endsWith('.tsx')) {
@@ -47,4 +47,4 @@ async function readAsString(path: string): Promise<string> {
     });
 }
 
-export default parse;
+export { parse };

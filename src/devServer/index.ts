@@ -2,7 +2,7 @@ import http2 from 'http2';
 import fs from 'fs';
 import path from 'path';
 import config from "../config";
-import parse from "../parseFile";
+import {parse} from "../parseFile";
 
 // 读取自签名证书和私钥
 const serverOptions = {

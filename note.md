@@ -11,3 +11,5 @@ problems:
 
 ### plugin function
 read File, transform to AST, plugins modify AST, at the end, generate new string.
+
+## global and module type of '.d.ts'

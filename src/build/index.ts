@@ -1,8 +1,7 @@
 import config from "../config";
 import fs from "fs";
 import path from "path";
-import ts from "typescript";
-import parse from "../parseFile";
+import {parse} from "../parseFile";
 
 const { appSrcDir, appDistDir } = config;
 

@@ -49,3 +49,27 @@ declare module "*.css";
 ### namespace
 
 namespace 可嵌套，内部 export 控制成员是否可在命名空间外部访问， 但当使用 declare namespace 时，其内部的 export 没有任何作用。
+
+
+## modules 
+
+ES 标准定义了 ES 模块的导入和导出如何进行链接，但没有定义如何查找这些文件，即模块解析。所以模块解析功能由宿主环境提供，而不同的宿主环境实现不一，因此需要通过 moduleResolution 选项来告知 typescript，宿主环境使用哪种模块解析方法
+
+TypeScript 的模块输出格式不仅受 tsconfig.json 中 compilerOptions 的 module 选项控制，还受文件的扩展名和 package.json 文件中的配置影响。
+
+### esmodule 与 commonjs
+esmodule 和 commonjs 的主要区别在于 esmodule 是异步加载，且在编译时就能确定依赖关系，不需要手动处理依赖循环问题，即使使用动态 import，也能对动态导入的模块进行单独分块，而 commonjs 是同步加载，是完全运行时的，需要对代码进行上下文分析，打包器在分析依赖关系时将所有可能用到的模块绑定在一起，并手动处理依赖循环问题
+
+
+### esm 与 cjs 互操作
+对于 esm 与 cjs 互操作，大多数运行时环境和打包器可被分为三类策略：
+1. 仅使用 ESM -- 如浏览器
+2. 类似于 Bundler， 使用 ESM 语法编写代码，后转译为 CJS， 较宽松。
+3. Nodejs - 在 nodejs 中， cjs 无法同步加载 ems，默认导入绑定为 exports 对象（打包器可能会将默认导入绑定为 exports.default 对象）
+
+当 module 选项为 node16 或 nodenext， typescript 使用 nodejs 策略，否则使用类似于 Bundler策略。
+
+typescript 不会转换模块标识符， 因此，模块说明符必须以一种适用于代码的目标运行时或打包器的方式编写，而理解这些输出相对说明符是TypeScript的工作。
+
+typescript 通过输出映射-输入映射来找到对应对模块。
+![alt text](image.png)

@@ -1,4 +1,6 @@
-todos: 声明合并、moduleResolution、条件类型、infer
+todos: 条件类型、infer
+
+类型和变量不共享命名空间
 
 ## tsconfig.json
 
@@ -73,3 +75,44 @@ typescript 不会转换模块标识符， 因此，模块说明符必须以一�
 
 typescript 通过输出映射-输入映射来找到对应对模块。
 ![alt text](image.png)
+
+
+## decalration merging
+
+不同模块不能进行声明合并
+
+模块中进行全局声明: `declare global {  }`
+
+### 合并 interface
+非函数成员类型是唯一的，否则报错。
+同一函数成员合并为重载， （如果一个签名有一个参数的类型是单一字符串字面值类型，那么它将被冒泡到其合并的重载列表的顶部）
+
+### 合并 namespaces
+namespace 的主要作用是用于组织代码，提供作用域和避免命名冲突。当 TypeScript 编译时，namespace 会被编译成相应的 JavaScript 代码，其中包含的内容会被封装在一个闭包中，以实现模块化的效果。
+
+namespace 中的非导出成员，在另一个同一 namespace 声明中无法访问。
+
+### 将 namespaces 与 classes、functions 和 enums 合并
+
+将需要合并的成员通过 export 导出。
+
+与 functions 合并时， namespace 中的成员将通过属性扩展到函数上
+
+### 模块增强
+```ts
+// observable.ts
+export class Observable<T> {
+  // ... implementation left as an exercise for the reader ...
+}
+// map.ts
+import { Observable } from "./observable";
+declare module "./observable" {
+  interface Observable<T> {
+    map<U>(f: (x: T) => U): Observable<U>;
+  }
+}
+Observable.prototype.map = function (f) {
+  // ... another exercise for the reader
+};
+
+```

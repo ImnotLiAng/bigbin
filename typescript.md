@@ -1,5 +1,3 @@
-todos: 条件类型、infer
-
 类型和变量不共享命名空间
 
 ## tsconfig.json
@@ -114,5 +112,70 @@ declare module "./observable" {
 Observable.prototype.map = function (f) {
   // ... another exercise for the reader
 };
+
+```
+
+## conditional type
+
+SomeType extends OtherType ? TrueType : FalseType;
+
+常用于定义泛型：
+before:
+```ts
+interface IdLabel {
+  id: number /* some fields */;
+}
+interface NameLabel {
+  name: string /* other fields */;
+}
+ 
+function createLabel(id: number): IdLabel;
+function createLabel(name: string): NameLabel;
+function createLabel(nameOrId: string | number): IdLabel | NameLabel;
+function createLabel(nameOrId: string | number): IdLabel | NameLabel {
+  throw "unimplemented";
+}
+```
+
+after: 
+```ts
+type NameOrId<T extends number | string> = T extends number
+  ? IdLabel
+  : NameLabel;
+
+function createLabel<T extends number | string>(idOrName: T): NameOrId<T> {
+  throw "unimplemented";
+}
+```
+
+条件类型约束：`type MessageOf<T> = T extends { message: unknown } ? T["message"] : never;`
+
+### 在条件类型中推断 infer
+```ts
+type GetReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+
+type ElementType<T> = T extends (infer U)[] ? U : T;
+
+
+type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
+
+// 递归提取嵌套 Promise 的类型
+type DeepUnwrapPromise<T> = T extends Promise<infer U> ? DeepUnwrapPromise<U> : T;
+
+```
+
+### 分配条件类型
+```ts
+type ToArray<Type> = Type extends any ? Type[] : never;
+
+// 当传入联合类型时，则条件类型将应用于该联合类型的每个成员
+type ToArray<Type> = Type extends any ? Type[] : never;
+ 
+type StrArrOrNumArr = ToArray<string | number>; // equal string[] | number[];
+
+// 可通过放括号来避免分配
+type ToArrayNonDist<Type> = [Type] extends [any] ? Type[] : never;
+
+type StrOrNumArr = ToArrayNonDist<string | number>; // equal (string | number)[];
 
 ```

@@ -41,3 +41,23 @@ const MyInput = forwardRef(function MyInput(props, ref) {
 
 ```
 暴露的方法不一定需要匹配 DOM 节点相关的方法，也可以是其他子节点中的方法。
+
+
+## memo 与 PureComponent
+在父组件重新渲染时，一般会对子组件进行重新渲染，
+此时可以使用 PureComponent 在 props 和 state 不变的情况下规避掉重新渲染：
+默认对 props 和 state 进行浅比较，可以通过定义 shouldComponentUpdate 方法来自定比较函数.
+```js
+class Greeting extends PureComponent {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+```
+函数式组件则使用 memo, 当传递给组件的 props 发生变化时，才会触发组件的重新渲染。
+默认情况下进行浅比较，可以通过第二个参数设置自定义比较函数
+```js
+const Greeting = memo(function Greeting({ name }) {
+  return <h3>Hello{name && ', '}{name}!</h3>;
+});
+```

@@ -90,11 +90,12 @@ namespace 的主要作用是用于组织代码，提供作用域和避免命名�
 
 namespace 中的非导出成员，在另一个同一 namespace 声明中无法访问。
 
-### 将 namespaces 与 classes、functions 和 enums 合并
-
+### 将 namespaces 与 interfalce、 classes、functions 和 enums 合并
 将需要合并的成员通过 export 导出。
 
-与 functions 合并时， namespace 中的成员将通过属性扩展到函数上
+与 functions 合并时， namespace 中的成员将通过属性扩展到函数上,
+
+namespace 中即可声明类型，也能声明值直接用于扩展对象，函数, 枚举等
 
 ### 模块增强
 ```ts

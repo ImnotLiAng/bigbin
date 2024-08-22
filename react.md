@@ -61,3 +61,15 @@ const Greeting = memo(function Greeting({ name }) {
   return <h3>Hello{name && ', '}{name}!</h3>;
 });
 ```
+
+
+## context
+ `const SomeContext =  React.createContext(defaultValue) // 这里的 defaultValue 为组件没有匹配的上下文时的默认值`
+
+ `<SomeContext.Provider value={someValue}>` 使用 provider 包裹组件，可嵌套，被包裹组件获取最近的上下文
+
+ `<SomeContext.Consumer>{someValue => <button>{someValue}</button>}</SomeContext.Consumer>` 使用 consumer 读取上下文（遗留方法）， 也可嵌套
+
+ `const someValue = React.useContext(SomeContext)` 使用 useContext 读取， 没有匹配到上下文时，即为 React.createContext(defaultValue) 中的 defaultValue
+
+`static contextType = SomeContext;` 在类式组件中，通过 ‘static contextType’ 声明要读取的 context， 仅支持读取单个 context， 在实例方法中，使用 this.context 获取值
